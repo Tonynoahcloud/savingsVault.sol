@@ -34,6 +34,7 @@ contract savingsVault {
 
 
     function depositEth (uint256) public payable {
+        require(savingGoals[msg.sender] > 0, "you have not set your savings goal"); // made sure a user set a Goal before they can make a deposit
         require(msg.value > 0, "value has to be positive");
         balances[msg.sender] += msg.value;
         emit deposit (
