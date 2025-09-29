@@ -20,9 +20,9 @@ contract savingsVault {
         uint256 balances
     );
 
-    mapping (address => uint256) private balances;
+    mapping (address => uint256) public balances;
 
-    mapping (address => uint256) private savingGoals;
+    mapping (address => uint256) public savingGoals;
 
     uint256 constant PENALTY_FEE = 500;
 
@@ -33,9 +33,9 @@ contract savingsVault {
     
 
 
-    function depositEth (uint256) public payable {
-        require(savingGoals[msg.sender] > 0, "you have not set your savings goal"); // made sure a user set a Goal before they can make a deposit
-        require(msg.value > 0, "value has to be positive");
+    function depositEth () public payable {
+        require(savingGoals[msg.sender] >= 1 ether, "you have not set your savings goal"); // made sure a user set a Goal before they can make a deposit
+        require(msg.value >= 1 ether, "value has to be positive");
         balances[msg.sender] += msg.value;
         emit deposit (
             msg.sender,
@@ -45,8 +45,8 @@ contract savingsVault {
     }
     
     function setGoal(uint256 amount) public  {
-        require(amount > 0, "your set goal must be atleast 1 Eth");
-        savingGoals[msg.sender] = amount * 1 ether;
+        require(amount >= 1 ether, "your set goal must be atleast 1 Eth");
+        savingGoals[msg.sender] = amount;
 
         emit goals (
             msg.sender,

@@ -6,14 +6,18 @@ import {savingsVault} from "../src/savingsvault.sol";
 
 
 contract savingsVaultTest is Test {
-    uint256 savingsGoals;
+    savingsVault public savingsvault;
 
-    function setUp() public view {
-        savingsGoals >= 1;
+    function setUp() public  {
+        savingsvault = new savingsVault();
 
     }
 
-    function test_depositEth() public view {
-        assertEq(savingsGoals, 0);
+
+    function testdepositEthNoGoalSet() public {
+        savingsvault.setGoal (1 ether);
+        savingsvault.depositEth{value:  1 ether}();
+        assertGt(savingsvault.savingGoals(address(this)), 0.5 ether);
     }
+
 }
