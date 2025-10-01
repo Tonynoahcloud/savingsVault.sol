@@ -42,7 +42,7 @@ contract savingsVault {
         return balances[msg.sender];
     }
 
-    function withdraw(uint256 _amount) public onlyOwner {
+    function withdraw(uint256 _amount) public {
         if (balances[msg.sender] >= savingGoals[msg.sender] && balances[msg.sender] > _amount) {
             balances[msg.sender] -= _amount;
         } else if (balances[msg.sender] < savingGoals[msg.sender] && balances[msg.sender] > _amount) {
