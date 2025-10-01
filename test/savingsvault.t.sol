@@ -11,6 +11,9 @@ contract savingsVaultTest is Test {
         savingsvault = new savingsVault();
     }
 
+    receive() external payable {}
+    fallback() external payable {}
+
     function testdepositEth_GoalSet() public {
         savingsvault.setGoal(1 ether);
         savingsvault.depositEth{value: 1 ether}();

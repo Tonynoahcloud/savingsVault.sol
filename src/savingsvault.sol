@@ -51,6 +51,9 @@ contract savingsVault {
             revert("you dont qualify");
         }
 
+        (bool success,) = payable(msg.sender).call{value: _amount}("");
+        require(success, "withdrawal failed");
+
         emit withdrawalMade(msg.sender, _amount, balances[msg.sender]);
     }
 }
