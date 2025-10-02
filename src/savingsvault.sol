@@ -19,11 +19,6 @@ contract savingsVault {
         owner = msg.sender;
     }
 
-    modifier onlyOwner() {
-        owner == msg.sender;
-        _;
-    }
-
     function depositEth() public payable {
         require(savingGoals[msg.sender] >= 1 ether, "you have not set your savings goal"); // made sure a user set a Goal before they can make a deposit
         require(msg.value >= 1 ether, "value has to be positive");
@@ -43,16 +38,18 @@ contract savingsVault {
     }
 
     function withdraw(uint256 _amount) public {
+        uint256 payout;
         if (balances[msg.sender] >= savingGoals[msg.sender] && balances[msg.sender] >= _amount) {
+            payout = _amount;
             balances[msg.sender] -= _amount; // allows full withdrawal without penalty
         } else if (balances[msg.sender] < savingGoals[msg.sender] && balances[msg.sender] > _amount) {
-            balances[msg.sender] -= (_amount * PENALTY_FEE) / 10000;
+            payout = _amount - ((_amount * PENALTY_FEE) / 10000);
+            balances[msg.sender] -= _amount;
         } else {
-            revert("you dont qualify");
+            revert("you dont have enough funds to perform this transaction");
         }
 
-        (bool success,) = payable(msg.sender).call{value: _amount}("");
-        require(success, "withdrawal failed");
+        payable(msg.sender).transfer(payout);
 
         emit withdrawalMade(msg.sender, _amount, balances[msg.sender]);
     }
